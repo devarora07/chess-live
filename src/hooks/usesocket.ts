@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { INIT_GAME, MOVE } from '../constants'
 
-const WS_URL = 'ws://localhost:8080'
+const WS_URL = 'ws://localhost:5050'
 
 export const useSocket = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null)
