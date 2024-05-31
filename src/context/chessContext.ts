@@ -1,3 +1,3 @@
 import { createContext } from 'react'
 
-export const ChessContext = createContext({})
+export const ChessContext = createContext<any>(null)

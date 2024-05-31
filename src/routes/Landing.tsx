@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useSocket } from '../hooks/usesocket'
-import { useNavigate } from 'react-router-dom'
 import Chessboard from '../components/Chessboard'
 import { Chess } from 'chess.js'
 import { GAME_OVER, INIT_GAME, MOVE } from '../constants'
@@ -9,8 +8,7 @@ import { ChessContext } from '../context/chessContext'
 
 const Landing = () => {
   const { socket, handleMessage } = useSocket()
-  const navigate = useNavigate()
-  const [chess, setChess] = useState(new Chess())
+  const [chess] = useState(new Chess())
   const [board, setBoard] = useState(chess.board())
   const { chessData, setChessData } = useContext(ChessContext)
 
