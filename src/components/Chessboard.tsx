@@ -87,7 +87,7 @@ const Chessboard = ({
                       {square ? (
                         <img
                           className="w-18"
-                          src={`src/assets/${
+                          src={`/assets/${
                             square?.color === 'b'
                               ? `b${square?.type}`
                               : `w${square?.type}`
