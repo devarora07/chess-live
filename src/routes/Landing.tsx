@@ -11,8 +11,6 @@ const Landing = () => {
   const { socket, handleMessage } = useSocket()
   const { chessData, setChessData } = useContext(ChessContext)
 
-  console.log('socket', socket)
-
   useEffect(() => {
     setChessData((prevState) => {
       return { ...prevState, board: chessData.chess.board() }
@@ -25,7 +23,6 @@ const Landing = () => {
     }
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      console.log('onmessage', message)
 
       switch (message.type) {
         case INIT_GAME:
@@ -46,7 +43,6 @@ const Landing = () => {
 
           break
         case PENDING_USER:
-          console.log('pending user called')
           setChessData((prevState) => {
             return { ...prevState, waiting: true }
           })
@@ -55,17 +51,14 @@ const Landing = () => {
         case MOVE:
           const { move } = message.payload
           chessData.chess.move(move)
-          console.log('move called', move)
           setChessData((prevState) => {
             return {
               ...prevState,
               board: chessData.chess.board(),
             }
           })
-          console.log('Move made')
           break
         case GAME_OVER:
-          console.log('Game over')
           break
       }
     }

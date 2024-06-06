@@ -49,7 +49,6 @@ const Chessboard = ({
                         onClick={() => {
                           if (!from) {
                             const res = chess.get(squareRepresentation)
-                            console.log('res', res)
                             if (
                               chessData.color.charAt(0).toLowerCase() ===
                               res.color
@@ -77,10 +76,6 @@ const Chessboard = ({
                               to: squareRepresentation,
                             })
                             setBoard(chess.board())
-                            console.log({
-                              from,
-                              to: squareRepresentation,
-                            })
                           }
                         }}
                         key={j}

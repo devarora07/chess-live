@@ -12,7 +12,6 @@ export const useSocket = () => {
     switch (message.type) {
       case INIT_GAME:
         {
-          console.log('init game called...', message.type)
           socket.send(
             JSON.stringify({
               type: INIT_GAME,
