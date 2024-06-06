@@ -129,6 +129,11 @@ const Chessboard = ({
                                     ? `b${col.type}`
                                     : `w${col.type}`
                                 }.png`}
+                                alt={`${
+                                  col.color === 'b'
+                                    ? `b${col.type}`
+                                    : `w${col.type}`
+                                }`}
                               />
                             ) : null}
                           </div>

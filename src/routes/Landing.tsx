@@ -1,21 +1,23 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { useSocket } from '../hooks/usesocket'
 import Chessboard from '../components/ChessBoard'
-import { Chess } from 'chess.js'
 import { GAME_OVER, INIT_GAME, MOVE, PENDING_USER } from '../constants'
 import { ChessContext } from '../context/chessContext'
 import Wrapper from '../components/Wrapper'
 import Loader from '../components/Loader'
-import { TailSpin, ThreeDots } from 'react-loader-spinner'
+import { TailSpin } from 'react-loader-spinner'
 
 const Landing = () => {
   const { socket, handleMessage } = useSocket()
-  const [chess] = useState(new Chess())
-  const [board, setBoard] = useState(chess.board())
-  const [waiting, setWaiting] = useState(false)
   const { chessData, setChessData } = useContext(ChessContext)
 
   console.log('socket', socket)
+
+  useEffect(() => {
+    setChessData((prevState) => {
+      return { ...prevState, board: chessData.chess.board() }
+    })
+  }, [])
 
   useEffect(() => {
     if (!socket) {
@@ -27,8 +29,13 @@ const Landing = () => {
 
       switch (message.type) {
         case INIT_GAME:
-          setWaiting(false)
-          setBoard(chess.board())
+          setChessData((prevState: any) => {
+            return {
+              ...prevState,
+              waiting: false,
+              board: prevState.chess.board(),
+            }
+          })
           setChessData((prev: any) => {
             return {
               ...prev,
@@ -40,13 +47,21 @@ const Landing = () => {
           break
         case PENDING_USER:
           console.log('pending user called')
-          setWaiting(true)
+          setChessData((prevState) => {
+            return { ...prevState, waiting: true }
+          })
           break
 
         case MOVE:
           const { move } = message.payload
-          chess.move(move)
-          setBoard(chess.board())
+          chessData.chess.move(move)
+          console.log('move called', move)
+          setChessData((prevState) => {
+            return {
+              ...prevState,
+              board: chessData.chess.board(),
+            }
+          })
           console.log('Move made')
           break
         case GAME_OVER:
@@ -58,6 +73,12 @@ const Landing = () => {
 
   const handleClick = () => {
     handleMessage({ type: INIT_GAME })
+  }
+
+  const setBoard = (board) => {
+    setChessData((prevState) => {
+      return { ...prevState, board: board }
+    })
   }
 
   if (!socket)
@@ -72,13 +93,13 @@ const Landing = () => {
       {chessData.started ? (
         <Chessboard
           started={chessData.started}
-          chess={chess}
-          board={board}
+          chess={chessData.chess}
+          board={chessData.board}
           socket={socket}
           setBoard={setBoard}
         />
       ) : (
-        <Chessboard board={board} started={chessData.started} />
+        <Chessboard board={chessData.board} started={chessData.started} />
       )}
       <div className=" w-full h-full flex items-center justify-center bg-slate-300">
         {chessData.started ? (
@@ -86,7 +107,7 @@ const Landing = () => {
             <p className="text-xl">Good Luck!</p>
             <p className="text-xl">You are {chessData.color}</p>
           </div>
-        ) : waiting ? (
+        ) : chessData.waiting ? (
           <div className="flex flex-col items-center justify-center">
             <p className="text-xl pb-10">Waiting for player to join</p>
             <TailSpin
