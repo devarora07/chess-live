@@ -6,13 +6,15 @@ import { ChessContext } from '../context/chessContext'
 import Wrapper from '../components/Wrapper'
 import Loader from '../components/Loader'
 import { TailSpin } from 'react-loader-spinner'
+import { ChessDataState } from '../types'
+import { Color, PieceSymbol, Square } from 'chess.js'
 
 const Landing = () => {
   const { socket, handleMessage } = useSocket()
   const { chessData, setChessData } = useContext(ChessContext)
 
   useEffect(() => {
-    setChessData((prevState) => {
+    setChessData((prevState: ChessDataState) => {
       return { ...prevState, board: chessData.chess.board() }
     })
   }, [])
@@ -26,16 +28,16 @@ const Landing = () => {
 
       switch (message.type) {
         case INIT_GAME:
-          setChessData((prevState: any) => {
+          setChessData((prevState: ChessDataState) => {
             return {
               ...prevState,
               waiting: false,
               board: prevState.chess.board(),
             }
           })
-          setChessData((prev: any) => {
+          setChessData((prevState: ChessDataState) => {
             return {
-              ...prev,
+              ...prevState,
               started: true,
               color: message.payload.message.color,
             }
@@ -43,7 +45,7 @@ const Landing = () => {
 
           break
         case PENDING_USER:
-          setChessData((prevState) => {
+          setChessData((prevState: ChessDataState) => {
             return { ...prevState, waiting: true }
           })
           break
@@ -51,7 +53,7 @@ const Landing = () => {
         case MOVE:
           const { move } = message.payload
           chessData.chess.move(move)
-          setChessData((prevState) => {
+          setChessData((prevState: ChessDataState) => {
             return {
               ...prevState,
               board: chessData.chess.board(),
@@ -68,8 +70,14 @@ const Landing = () => {
     handleMessage({ type: INIT_GAME })
   }
 
-  const setBoard = (board) => {
-    setChessData((prevState) => {
+  const setBoard = (
+    board: ({
+      square: Square
+      type: PieceSymbol
+      color: Color
+    } | null)[][]
+  ) => {
+    setChessData((prevState: ChessDataState) => {
       return { ...prevState, board: board }
     })
   }

@@ -11,15 +11,7 @@ const Chessboard = ({
   started,
 }: {
   chess?: Chess
-  setBoard?: React.Dispatch<
-    React.SetStateAction<
-      ({
-        square: Square
-        type: PieceSymbol
-        color: Color
-      } | null)[][]
-    >
-  >
+  setBoard?: Function
   board: ({
     square: Square
     type: PieceSymbol
