@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 import { useSocket } from '../hooks/usesocket'
-import Chessboard from '../components/ChessBoard'
+import Chessboard from '../components/Chessboard'
 import { GAME_OVER, INIT_GAME, MOVE, PENDING_USER } from '../constants'
 import { ChessContext } from '../context/chessContext'
 import Wrapper from '../components/Wrapper'
